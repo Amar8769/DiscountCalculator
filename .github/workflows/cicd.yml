@@ -33,32 +33,13 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t amarvaid876/discount-calculator:latest .
+        docker build -t amarvaid876/discount-calculator:latest 
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Run Flask App
+      run: |
+        python app.py
 
     - name: Push Docker image
       run: |
         docker push amarvaid876/discount-calculator:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
-
-    - name: Set up Kubeconfig
-      run: |
-        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl apply -f deployment.yaml
