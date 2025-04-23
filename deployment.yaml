@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discount-calculator
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: discount-calculator
+  template:
+    metadata:
+      labels:
+        app: discount-calculator
+    spec:
+      containers:
+        - name: discount-calculator
+          image: amarvaid876/discount-calculator:latest
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discount-calculator-service
+spec:
+  selector:
+    app: discount-calculator
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discount Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f9;
+      }
+      .container {
+        text-align: center;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      input {
+        margin: 10px 0;
+        padding: 10px;
+        width: 80%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .result {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Discount Calculator</h1>
+      <form id="discountForm">
+        <input
+          type="number"
+          id="originalPrice"
+          placeholder="Original Price"
+          required
+        />
+        <input
+          type="number"
+          id="discountPercentage"
+          placeholder="Discount Percentage"
+          required
+        />
+        <button type="submit">Calculate</button>
+      </form>
+      <div class="result" id="result"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("discountForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const originalPrice = document.getElementById("originalPrice").value;
+          const discountPercentage =
+            document.getElementById("discountPercentage").value;
+
+          const response = await fetch("/calculate_discount", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              original_price: originalPrice,
+              discount_percentage: discountPercentage,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById("result").innerHTML = `
+                    <p>Original Price: $${result.original_price.toFixed(2)}</p>
+                    <p>Discount Percentage: ${result.discount_percentage}%</p>
+                    <p>Discount Amount: $${result.discount_amount.toFixed(
+                      2
+                    )}</p>
+                    <p>Final Price: $${result.final_price.toFixed(2)}</p>
+                `;
+          } else {
+            document.getElementById(
+              "result"
+            ).innerHTML = `<p style="color: red;">Error: ${result.error}</p>`;
+          }
+        });
+    </script>
+  </body>
+</html>
