@@ -28,5 +28,6 @@ jobs:
 
     - name: Run Flask App
       run: |
-        python app.py
+        nohup python app.py &
+        sleep 10
 
