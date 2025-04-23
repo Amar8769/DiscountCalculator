@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Welcome to the Discount Calculator API!"
+    return "Welcome to the the updated app.py file!"
 
 
 @app.route('/calculate_discount', methods=['POST'])
